@@ -7,13 +7,7 @@ import { createStore, applyMiddleware } from "redux";
 import reduxPromise from "redux-promise";
 import { composeWithDevTools } from "redux-devtools-extension";
 import reducer from "./reducer";
-// import * as io from 'socket.io-client';
 import { init } from './socket';
-
-// const socket = io.connect();
-// socket.on('hello', data => {
-//     console.log(data);
-// });
 
 const store = createStore(reducer, composeWithDevTools(applyMiddleware(reduxPromise)));
 
@@ -35,6 +29,8 @@ ReactDOM.render(
     component,
     document.querySelector('main')
 );
+
+
 
 // class components CAN have state
 // function components CANNOT have state

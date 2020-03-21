@@ -1,6 +1,24 @@
 import axios from "./axios";
 import { socket } from "./socket";
 
+export async function getUser() {
+    console.log("getUser action running");
+    const { data } = await axios.get("/user");
+    console.log("getUser data:", data);
+    return {
+        type: "GET_USER",
+        user: data
+    };
+}
+
+export async function updateBio(bio) {
+    await axios.post("/updatebio", {bio: bio});
+    return {
+        type: "UPDATE_BIO",
+        bio: bio
+    };
+}
+
 export async function receiveFriends() {
     const { data } = await axios.get("/friends.json");
     return {

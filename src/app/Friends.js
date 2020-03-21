@@ -7,6 +7,10 @@ import FriendsCard from './FriendsCard';
 
 export default function Friends(props) {
 
+    const user = useSelector(
+        state => state.user
+    )
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -21,13 +25,13 @@ export default function Friends(props) {
 
     const friendRequestsReceived = useSelector(
         state => state.friends && state.friends.filter(
-            friend => friend.accepted == false && friend.sender_id != props.userId
+            friend => friend.accepted == false && friend.sender_id != user.id
         )
     )
 
     const friendRequestsSent = useSelector(
         state => state.friends && state.friends.filter(
-            friend => friend.accepted == false && friend.sender_id == props.userId
+            friend => friend.accepted == false && friend.sender_id == user.id
         )
     )
 

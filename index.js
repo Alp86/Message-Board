@@ -12,7 +12,6 @@ const {
     getUserById, insertChatMessage, getLastTenChatMessages, getPrivateMessages, insertPrivateMessage
 } = require('./libs/db');
 
-
 app.use(compression());
 
 if (process.env.NODE_ENV != 'production') {

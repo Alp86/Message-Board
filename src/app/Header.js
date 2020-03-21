@@ -1,9 +1,14 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import ProfilePic from "./ProfilePic";
 import { Link } from 'react-router-dom';
 import Logout from "../welcome/Logout";
 
-export default function Header ({data}) {
+export default function Header () {
+
+    const user = useSelector(
+        state => state.user
+    );
 
     return (
         <div className="header">
@@ -31,10 +36,10 @@ export default function Header ({data}) {
 
                 <Link to="/">
                     <ProfilePic
-                        id={data.id}
-                        first={data.first}
-                        last={data.last}
-                        url={data.url}
+                        id={user.id}
+                        first={user.first}
+                        last={user.last}
+                        url={user.url}
                     />
                 </Link>
             </div>

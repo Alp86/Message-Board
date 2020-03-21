@@ -1,12 +1,25 @@
 import React from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import ProfilePic from "./ProfilePic";
+import BioEditor from "./BioEditor";
 
-export default function( { first, last, profilePic, bioEditor } ) {
+export default function() {
+
+    const user = useSelector(
+        state => state.user
+    );
 
     return (
         <div className="profile">
-            {profilePic}
-            <p>{first} {last}</p>
-            {bioEditor}
+            <p>{user.first} {user.last}</p>
+
+            <ProfilePic
+                {...user}
+            />
+
+            <BioEditor
+                bio={user.bio}
+            />
         </div>
     );
 }

@@ -7,10 +7,10 @@ export default function FindPeople(props) {
 
     const [name, setName ] = useStatefulFields();
     const [users, setUsers] = useState([]);
-    console.log("name:", name);
 
     useEffect( () => {
         let abort;
+        
         ( async () => {
             if (name.name) {
                 const { data } = await axios.post("/users", {name: name.name});
@@ -23,18 +23,15 @@ export default function FindPeople(props) {
                     setUsers(data);
                 }
             }
-
-            // const { data } = await axios.get("/recent-users");
-            // console.log("data:", data);
-            // setUsers(data);
         })();
+
         return () => {
             abort = true;
         };
+
     }, [name]);
 
     const clickHandler = id => {
-        // console.log("I've been clicked", e);
         props.history.push(`/user/${id}`);
     };
 

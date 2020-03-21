@@ -1,4 +1,22 @@
 export default function(state = {}, action) {
+
+    if (action.type === "GET_USER") {
+        state = {
+            ...state,
+            user: action.user
+        };
+    }
+
+    if (action.type === "UPDATE_BIO") {
+        state = {
+            ...state,
+            user: {
+                ...state.user,
+                bio: action.bio
+            }
+        };
+    }
+
     if (action.type === "RECEIVE_FRIENDS") {
         state = {
             ...state,
