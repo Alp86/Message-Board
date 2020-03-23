@@ -233,3 +233,95 @@ exports.getPrivateMessages = function(sender_id, receiver_id) {
         [sender_id, receiver_id]
     );
 };
+
+exports.getForums = function() {
+    return db.query(
+        `
+        SELECT forums.*, COUNT(threads.id) AS "numberOfThreads", COUNT(posts.id) AS "numberOfPosts"
+        FROM forums
+        LEFT JOIN threads
+        ON forums.id = forum_id
+        LEFT JOIN posts
+        ON thread_id = threads.id
+        GROUP BY forums.id
+        `
+    );
+};
+
+exports.getThreads = function(forumId) {
+    return db.query(
+        `
+        SELECT threads.*, users.id, first, last
+        FROM threads
+        LEFT JOIN users
+        ON threads.creator_id = users.id
+        WHERE forum_id = $1
+        `,
+        [forumId]
+    );
+};
+
+exports.getPostsByThreadId = function(threadId) {
+    return db.query(
+        `
+        SELECT posts.*, users.id, first, last, url
+        FROM posts
+        LEFT JOIN users
+        ON poster_id = users.id
+        WHERE thread_id = $1
+        `,
+        [threadId]
+    );
+};
+
+exports.getPostsByUserId = function(userId) {
+    return db.query(
+        `
+        SELECT *
+        FROM posts
+        WHERE poster_id = $1
+        `,
+        [userId]
+    );
+};
+
+exports.getReactions = function(postId) {
+    return db.query(
+        `
+        SELECT *
+        FROM post_reactions
+        WHERE post_id = $1
+        `,
+        [postId]
+    );
+};
+
+exports.insertThread = function(forumId, userId, title) {
+    return db.query(
+        `
+        INSERT INTO threads (forum_id, creator_id, title)
+        VALUES ($1, $2, $3)
+        `,
+        [forumId, userId, title]
+    );
+};
+
+exports.insertPost = function(threadId, userId, content) {
+    return db.query(
+        `
+        INSERT INTO posts (thread_id, poster_id, content)
+        VALUES ($1, $2, $3)
+        `,
+        [threadId, userId, content]
+    );
+};
+
+exports.insertReaction = function(postId, userId, reaction) {
+    return db.query(
+        `
+        INSERT INTO post_reactions (post_id, user_id, reaction)
+        VALUES ($1, $2, $3)
+        `,
+        [postId, userId, reaction]
+    );
+};

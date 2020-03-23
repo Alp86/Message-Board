@@ -19,6 +19,14 @@ export async function updateBio(bio) {
     };
 }
 
+export async function setUserImage(formData) {
+    const { data } = await axios.post("/user-image", formData);
+    return {
+        type: "SET_USER_IMAGE",
+        url: data.url
+    };
+}
+
 export async function receiveFriends() {
     const { data } = await axios.get("/friends.json");
     return {
@@ -114,5 +122,13 @@ export function imageChange(user) {
     return {
         type: "IMAGE_CHANGE",
         user: user
+    };
+}
+
+export function forumsDashboard(forumsObj) {
+    console.log("forumsDashboard running");
+    return {
+        type: "FORUMS_DASHBOARD",
+        forumsDashboard: forumsObj
     };
 }

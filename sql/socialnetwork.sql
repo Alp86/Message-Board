@@ -36,3 +36,32 @@ CREATE TABLE chat_messages (
     receiver_id INT REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE forums (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR NOT NULL
+);
+
+CREATE TABLE threads (
+    id SERIAL PRIMARY KEY,
+    forum_id INT NOT NULL REFERENCES forums(id),
+    title VARCHAR NOT NULL,
+    creator_id INT REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts (
+    id SERIAL PRIMARY KEY,
+    thread_id INT NOT NULL REFERENCES threads(id),
+    poster_id INT NOT NULL REFERENCES users(id),
+    content VARCHAR NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE post_reactions (
+    id SERIAL PRIMARY KEY,
+    post_id INT NOT NULL REFERENCES posts(id),
+    user_id INT NOT NULL REFERENCES users(id),
+    reaction VARCHAR NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

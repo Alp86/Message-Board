@@ -16,6 +16,11 @@ export default function Header () {
             <h1>Social Isolation</h1>
 
             <div className="header-link-container">
+
+                <Link className="header-link" to="/forums">
+                    <h3>Forums</h3>
+                </Link>
+
                 <Link className="header-link" to="/users-online">
                     <h3>See who&apos;s online</h3>
                 </Link>

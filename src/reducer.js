@@ -17,6 +17,16 @@ export default function(state = {}, action) {
         };
     }
 
+    if (action.type === "SET_USER_IMAGE") {
+        state = {
+            ...state,
+            user: {
+                ...state.user,
+                url: action.url
+            }
+        };
+    }
+
     if (action.type === "RECEIVE_FRIENDS") {
         state = {
             ...state,
@@ -101,6 +111,13 @@ export default function(state = {}, action) {
                 ...state.privateMessages,
                 action.privateMessage
             ]
+        };
+    }
+
+    if (action.type === "FORUMS_DASHBOARD") {
+        state = {
+            ...state,
+            forumsDashboard: action.forumsDashboard
         };
     }
 

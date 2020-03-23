@@ -2,7 +2,7 @@ import * as io from 'socket.io-client';
 
 import {
     chatMessages, chatMessage, usersOnline, userIsOnline, userIsOffline,
-    receiveFriends, privateMessage, privateMessages
+    receiveFriends, privateMessage, privateMessages, forumsDashboard
 } from './actions';
 
 export let socket;
@@ -85,6 +85,15 @@ export const init = store => {
             msgs => {
                 store.dispatch(
                     privateMessages(msgs)
+                );
+            }
+        );
+
+        socket.on(
+            'forumsDashboard',
+            forumsObj => {
+                store.dispatch(
+                    forumsDashboard(forumsObj)
                 );
             }
         );

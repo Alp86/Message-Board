@@ -18,7 +18,7 @@ export default function BioEditor () {
     const classes = useStyles();
     const bio = useSelector(
         state => state.user && state.user.bio
-    )
+    );
 
     const [currentbio, setBio] = useState(bio);
     const [visibility, setVisibility] = useState(false);

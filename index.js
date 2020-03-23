@@ -9,7 +9,8 @@ const cookieSession = require('cookie-session');
 const csurf = require('csurf');
 const compression = require('compression');
 const {
-    getUserById, insertChatMessage, getLastTenChatMessages, getPrivateMessages, insertPrivateMessage
+    getUserById, insertChatMessage, getLastTenChatMessages, getPrivateMessages, insertPrivateMessage,
+    getForums,
 } = require('./libs/db');
 
 app.use(compression());
@@ -93,10 +94,10 @@ let listOfOnlineUsers = {};
 let usersOnline = [];
 
 io.on('connection', socket => {
-    console.log(
-        `A socket with the id ${socket.id} just connected.`
-    );
+    console.log(`A socket with the id ${socket.id} just connected.`)
+    ;
     console.log("socket.request.session.user.id:", socket.request.session.user.id);
+
     if (!socket.request.session.user.id) {
         return socket.disconnect(true);
     }
@@ -112,6 +113,14 @@ io.on('connection', socket => {
             socket.broadcast.emit("userIsOnline", rows[0]);
         });
     }
+
+    getLastTenChatMessages().then( ({rows}) => {
+        socket.emit("chatMessages", rows.reverse());
+    });
+
+    getForums().then( ({rows}) => {
+        socket.emit("forumsDashboard", rows);
+    });
 
     // if user disconnects, emit message that user is offline
     socket.on("disconnect", () => {
@@ -129,11 +138,6 @@ io.on('connection', socket => {
     listOfOnlineUsers[socket.id] = userId;
     console.log("listOfOnlineUsers:", listOfOnlineUsers);
 
-    getLastTenChatMessages().then( ({rows}) => {
-        socket.emit("chatMessages", rows.reverse());
-    });
-
-    // we need to listen for a new chat message being emitted..
     socket.on("newMessage", newMsg => {
         Promise.all([insertChatMessage(newMsg, userId), getUserById(userId)])
             .then(results => {

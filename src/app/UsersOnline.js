@@ -8,12 +8,6 @@ export default function UsersOnline() {
         state => state && state.usersOnline
     );
 
-    // <ProfilePic
-    // id={user.id}
-    // first={user.first}
-    // last={user.last}
-    // url={user.url}
-    // />
     return (
         <>
             <div className="friends-container">
