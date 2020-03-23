@@ -244,6 +244,7 @@ exports.getForums = function() {
         LEFT JOIN posts
         ON thread_id = threads.id
         GROUP BY forums.id
+        ORDER BY forums.id ASC
         `
     );
 };
@@ -251,11 +252,15 @@ exports.getForums = function() {
 exports.getThreads = function(forumId) {
     return db.query(
         `
-        SELECT threads.*, users.id, first, last
+        SELECT threads.*, users.first, users.last, COUNT(posts.id) AS "numberOfPosts"
         FROM threads
         LEFT JOIN users
-        ON threads.creator_id = users.id
+        ON users.id = creator_id
+        LEFT JOIN posts
+        ON thread_id = threads.id
         WHERE forum_id = $1
+        GROUP BY threads.id, users.first, users.last
+        ORDER BY threads.id ASC
         `,
         [forumId]
     );
@@ -269,6 +274,7 @@ exports.getPostsByThreadId = function(threadId) {
         LEFT JOIN users
         ON poster_id = users.id
         WHERE thread_id = $1
+        ORDER BY posts.id ASC
         `,
         [threadId]
     );

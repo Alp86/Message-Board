@@ -125,10 +125,33 @@ export function imageChange(user) {
     };
 }
 
-export function forumsDashboard(forumsObj) {
-    console.log("forumsDashboard running");
+export function receiveForums(forumsObj) {
+    console.log("receiveForums running");
     return {
-        type: "FORUMS_DASHBOARD",
-        forumsDashboard: forumsObj
+        type: "RECEIVE_FORUMS",
+        forums: forumsObj
+    };
+}
+
+export function receiveThreads(threadsObj) {
+    console.log("receiveThreads running");
+    return {
+        type: "RECEIVE_THREADS",
+        threads: threadsObj
+    };
+}
+
+export function clearThreads() {
+    return {
+        type: "CLEAR_THREADS",
+        threads: []
+    };
+}
+
+export function receivePostsByThreadId(postsObj) {
+    console.log("Receiving posts by threadId:", postsObj);
+    return {
+        type: "RECEIVE_POSTS_BY_THREAD_ID",
+        posts: postsObj
     };
 }

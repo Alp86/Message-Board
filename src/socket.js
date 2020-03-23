@@ -2,7 +2,8 @@ import * as io from 'socket.io-client';
 
 import {
     chatMessages, chatMessage, usersOnline, userIsOnline, userIsOffline,
-    receiveFriends, privateMessage, privateMessages, forumsDashboard
+    receiveFriends, privateMessage, privateMessages, receiveForums, receiveThreads,
+    receivePostsByThreadId
 } from './actions';
 
 export let socket;
@@ -93,7 +94,25 @@ export const init = store => {
             'forumsDashboard',
             forumsObj => {
                 store.dispatch(
-                    forumsDashboard(forumsObj)
+                    receiveForums(forumsObj)
+                );
+            }
+        );
+
+        socket.on(
+            'getThreads',
+            threadsObj => {
+                store.dispatch(
+                    receiveThreads(threadsObj)
+                );
+            }
+        );
+
+        socket.on(
+            'receivePostsByThreadId',
+            postsObj => {
+                store.dispatch(
+                    receivePostsByThreadId(postsObj)
                 );
             }
         );

@@ -8,6 +8,10 @@ export default function UsersOnline() {
         state => state && state.usersOnline
     );
 
+    const clickHandler = id => {
+        props.history.push(`/user/${id}`);
+    };
+
     return (
         <>
             <div className="friends-container">

@@ -35,18 +35,15 @@ export default function Chat() {
     };
 
     const dateFormat = dateStr => {
-        // const year = dateStr.split("T")[0].split("-")[0];
-        // const month = dateStr.split("T")[0].split("-")[1];
-        // const day = dateStr.split("T")[0].split("-")[2];
         const [year, month, day] = dateStr.split("T")[0].split("-");
         const [hours, minutes, seconds] = dateStr.split("T")[1].split(".")[0].split(":");
         const date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
         const options = {
             year: 'numeric', month: 'numeric', day: 'numeric',
             hour: 'numeric', minute: 'numeric', second: 'numeric',
-            hour12: false
+            hour12: true, timeZone: 'Europe/Berlin'
         };
-        return new Intl.DateTimeFormat('de-DE', options).format(date);
+        return new Intl.DateTimeFormat('en-US', options).format(date);
     };
 
     return (

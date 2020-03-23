@@ -114,10 +114,31 @@ export default function(state = {}, action) {
         };
     }
 
-    if (action.type === "FORUMS_DASHBOARD") {
+    if (action.type === "RECEIVE_FORUMS") {
         state = {
             ...state,
-            forumsDashboard: action.forumsDashboard
+            forums: action.forums
+        };
+    }
+
+    if (action.type === "RECEIVE_THREADS") {
+        state = {
+            ...state,
+            threads: action.threads
+        };
+    }
+
+    if (action.type === "CLEAR_THREADS") {
+        state = {
+            ...state,
+            threads: action.threads
+        };
+    }
+
+    if (action.type === "RECEIVE_POSTS_BY_THREAD_ID") {
+        state = {
+            ...state,
+            posts: action.posts
         };
     }
 

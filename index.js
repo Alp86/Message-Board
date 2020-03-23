@@ -10,7 +10,7 @@ const csurf = require('csurf');
 const compression = require('compression');
 const {
     getUserById, insertChatMessage, getLastTenChatMessages, getPrivateMessages, insertPrivateMessage,
-    getForums,
+    getForums, getThreads, getPostsByThreadId, getPostsByUserId
 } = require('./libs/db');
 
 app.use(compression());
@@ -122,7 +122,6 @@ io.on('connection', socket => {
         socket.emit("forumsDashboard", rows);
     });
 
-    // if user disconnects, emit message that user is offline
     socket.on("disconnect", () => {
         console.log(`user with userId ${userId} disconnected`);
         delete listOfOnlineUsers[socket.id];
@@ -204,6 +203,19 @@ io.on('connection', socket => {
                 io.sockets.sockets[socketId].emit('friendRequestUpdate');
             }
         }
+    });
+
+    socket.on("getThreads", forumId => {
+        getThreads(forumId).then(({rows}) => {
+            socket.emit("getThreads", rows);
+        }).catch(error => console.log("error in getThreads:", error));
+    });
+
+    socket.on("getPostsByThreadId", threadId => {
+        console.log("getPostsByThreadId:", threadId);
+        getPostsByThreadId(threadId).then( ({rows}) => {
+            socket.emit("receivePostsByThreadId", rows);
+        }).catch(error => console.log("error in getPostsByThreadId", error));
     });
 
 });

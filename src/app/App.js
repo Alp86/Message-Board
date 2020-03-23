@@ -13,6 +13,8 @@ import Friends from "./Friends";
 import Chat from "./Chat";
 import UsersOnline from "./UsersOnline";
 import ForumsDashboard from "./forum/ForumsDashboard";
+import Forum from "./forum/Forum";
+import Thread from "./forum/Thread";
 
 export default function App () {
 
@@ -66,14 +68,12 @@ export default function App () {
                         />
                     )}
                 />
+
                 <Route
                     path="/chat"
                     component={Chat}
                 />
-                <Route
-                    path="/forums"
-                    component={ForumsDashboard}
-                />
+
                 <Route
                     path="/users-online"
                     render={props => (
@@ -82,6 +82,38 @@ export default function App () {
                         />
                     )}
                 />
+
+                <Route
+                    exact path="/forums"
+                    render={props => (
+                        <ForumsDashboard
+                            history={props.history}
+                        />
+                    )}
+                />
+
+                <Route
+                    exact path="/forums/:forumId"
+                    render={props => (
+                        <Forum
+                            key={props.match.url}
+                            match={props.match}
+                            history={props.history}
+                        />
+                    )}
+                />
+
+                <Route
+                    path="/forums/:forumId/:threadId"
+                    render={props => (
+                        <Thread
+                            key={props.match.url}
+                            match={props.match}
+                            history={props.history}
+                        />
+                    )}
+                />
+
             </div>
             }
         </BrowserRouter>

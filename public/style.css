@@ -238,3 +238,8 @@ input, button {
 .header-link:hover {
     color: grey;
 }
+
+#forums {
+    display: flex;
+    flex-wrap: wrap;
+}
