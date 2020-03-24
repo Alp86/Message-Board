@@ -13,7 +13,7 @@ export default function Header () {
     return (
         <div className="header">
 
-            <h1>Social Isolation</h1>
+            <h1>Hang in there!</h1>
 
             <div className="header-link-container">
 

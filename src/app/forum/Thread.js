@@ -43,6 +43,8 @@ export default function Thread(props) {
 
     return (
         <>
+            <h1>{props.match.params.threadTitle.split("-").join(" ")}</h1>
+
             {numPosts && numPosts > 1 &&
                 <PaginationControls
                     history={props.history}
@@ -67,6 +69,13 @@ export default function Thread(props) {
 
                                 />
                                 <span>{post.first} {post.last}</span>
+
+                                {usersOnline.map(user =>
+                                    user.id == post.poster_id &&
+                                    <div className={`online-status online`}></div> ||
+                                    <div className={`online-status offline`}></div>
+                                )}
+
                             </div>
 
                             <div className="post-content-container">

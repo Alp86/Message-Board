@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {  } from "../../actions";
 import { socket } from "../../socket";
 import ThreadPanel from "./ThreadPanel";
+import PaginationControls from "./Pagination";
 
 export default function Forum(props) {
 
