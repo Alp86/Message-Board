@@ -74,9 +74,9 @@ export default function OtherProfile(props) {
         const options = {
             year: 'numeric', month: 'numeric', day: 'numeric',
             hour: 'numeric', minute: 'numeric', second: 'numeric',
-            hour12: false
+            hour12: true, timeZone: 'Europe/Berlin'
         };
-        return new Intl.DateTimeFormat('de-DE', options).format(date);
+        return new Intl.DateTimeFormat('en-US', options).format(date);
     };
 
     return (

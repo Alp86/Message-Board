@@ -269,12 +269,40 @@ exports.getThreads = function(forumId) {
 exports.getPostsByThreadId = function(threadId) {
     return db.query(
         `
-        SELECT posts.*, users.id, first, last, url
+        SELECT posts.*, users.id, first, last, url, (
+            SELECT id
+            FROM posts
+            WHERE thread_id = $1
+            ORDER BY id DESC
+            LIMIT 1
+        ) AS "highestPostId"
         FROM posts
         LEFT JOIN users
         ON poster_id = users.id
         WHERE thread_id = $1
         ORDER BY posts.id ASC
+        LIMIT 20
+        `,
+        [threadId]
+    );
+};
+
+exports.getMorePostsByThreadId = function(threadId, lastPostId) {
+    return db.query(
+        `
+        SELECT posts.*, users.id, first, last, url, (
+            SELECT id
+            FROM posts
+            WHERE thread_id = $1
+            ORDER BY id DESC
+            LIMIT 1
+        ) AS "highestPostId
+        FROM posts
+        LEFT JOIN users
+        ON poster_id = users.id
+        WHERE thread_id = $1 AND posts.id > lastPostId
+        ORDER BY posts.id ASC
+        LIMIT 20
         `,
         [threadId]
     );
