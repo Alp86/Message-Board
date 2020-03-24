@@ -1,6 +1,5 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import Pagination from '@material-ui/lab/Pagination';
 
 const useStyles = makeStyles(theme => ({
@@ -23,7 +22,12 @@ export default function PaginationControls(props) {
 
     return (
         <div className={classes.root}>
-            <Pagination count={props.numPages} page={page} onChange={handleChange} />
+            <Pagination
+                count={props.numPages}
+                page={page}
+                siblingCount={2}
+                onChange={handleChange}
+            />
         </div>
     );
 }

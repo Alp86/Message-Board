@@ -22,6 +22,8 @@ export default function Thread(props) {
             firstPost: firstPost,
             lastPost: lastPost
         });
+
+        window.scrollTo(0, 0)
     }, [props.match.params.pageNum]);
 
     const posts = useSelector(state => state.posts);
@@ -84,10 +86,21 @@ export default function Thread(props) {
                     }
                 />
             ))}
-            {
-                posts && parseInt(posts[0]["highestPostId"]) > parseInt(posts[posts.length-1].id) &&
-                <p>more posts</p>
+
+            {numPosts && numPosts > 1 &&
+                <PaginationControls
+                    history={props.history}
+                    match={props.match}
+                    numPages={Math.ceil(numPosts / 10)}
+                    currentPage={parseInt(props.match.params.pageNum)}
+                />
             }
         </>
     )
 }
+
+
+// {
+//     posts && parseInt(posts[0]["highestPostId"]) > parseInt(posts[posts.length-1].id) &&
+//     <p>more posts</p>
+// }
