@@ -4,19 +4,28 @@ import { useDispatch, useSelector } from 'react-redux';
 import { socket } from "../../socket";
 import Post from "./Post";
 import ProfilePic from "../ProfilePic";
+import Navigation from "./Navigation";
+import PaginationControls from "./Pagination";
 
 export default function Thread(props) {
     const usersOnline = useSelector(
         state => state && state.usersOnline
     );
 
-    console.log("threadId:", props.match.params.threadId);
+    console.log("props.match.params", props.match.params);
 
     useEffect(() => {
-        socket.emit("getPostsByThreadId", props.match.params.threadId);
-    },[]);
+        let firstPost = props.match.params.pageNum * 10 - 9;
+        let lastPost = props.match.params.pageNum * 10;
+        socket.emit("getPostsByThreadId", {
+            threadId: props.match.params.threadId,
+            firstPost: firstPost,
+            lastPost: lastPost
+        });
+    }, [props.match.params.pageNum]);
 
     const posts = useSelector(state => state.posts);
+    const numPosts = useSelector(state => state.posts && state.posts[0].highestPostId);
 
     const dateFormat = dateStr => {
         const [year, month, day] = dateStr.split("T")[0].split("-");
@@ -32,10 +41,21 @@ export default function Thread(props) {
 
     return (
         <>
+            {numPosts && numPosts > 1 &&
+                <PaginationControls
+                    history={props.history}
+                    match={props.match}
+                    numPages={Math.ceil(numPosts / 10)}
+                    currentPage={parseInt(props.match.params.pageNum)}
+                />
+            }
+
             {posts && posts.map((post, index) => (
                 <Post
                     children={
-                        <div id={index+1} className="post-container">
+
+                        <div id={index + props.match.params.pageNum * 10 - 9} className="post-container">
+
                             <div className="post-user">
                                 <ProfilePic
                                     id={post.poster_id}
@@ -45,22 +65,29 @@ export default function Thread(props) {
 
                                 />
                                 <span>{post.first} {post.last}</span>
-                                <span>{dateFormat(post.created_at)}</span>
                             </div>
-                            <div className="post-content">{post.content}</div>
-                            <div>
-                                <a href={`#${index+1}`} >
-                                    #{index+1}
-                                </a>
+
+                            <div className="post-content-container">
+
+                                <div className="post-info">
+                                    <span>{dateFormat(post.created_at)}</span>
+                                    <a href={`#${index + props.match.params.pageNum * 10 - 9}`}>
+                                        #{index + props.match.params.pageNum * 10 - 9}
+                                    </a>
+                                </div>
+
+                                <div className="post-content">{post.content}</div>
+
                             </div>
+
                         </div>
                     }
                 />
             ))}
+            {
+                posts && parseInt(posts[0]["highestPostId"]) > parseInt(posts[posts.length-1].id) &&
+                <p>more posts</p>
+            }
         </>
     )
 }
-// {`/forums/${props.match.params.forumId}/${props.match.params.threadId}/#${post.id}`}
-// <Link to={`/forums/${props.match.params.forumId}/${props.match.params.threadId}/#post${post.id}`}>
-// #{index+1}
-// </Link>

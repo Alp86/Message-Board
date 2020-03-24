@@ -25,8 +25,8 @@ export default function Forum(props) {
         return new Intl.DateTimeFormat('en-US', options).format(date);
     };
 
-    const clickHandler = id => {
-        props.history.push(`/forums/${props.match.params.forumId}/${id}`);
+    const clickHandler = thread => {
+        props.history.push(`/forums/${props.match.params.forumId}/${thread.title.split(" ").join("-")}.${thread.id}/page-1`);
     };
 
     return (
@@ -34,7 +34,7 @@ export default function Forum(props) {
         {threads && threads.map(thread => (
             <ThreadPanel
                 children={
-                    <div onClick={() => clickHandler(thread.id)}>
+                    <div onClick={() => clickHandler({title: thread.title, id: thread.id})}>
                         <h3>{thread.title}</h3>
                         <span>Started by {thread.first} {thread.last} </span>
                         <span>on {dateFormat(thread.created_at)}  </span>
@@ -46,3 +46,4 @@ export default function Forum(props) {
         </>
     )
 }
+// ${thread.title.split(" ").join("-")}

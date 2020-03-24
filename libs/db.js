@@ -266,7 +266,7 @@ exports.getThreads = function(forumId) {
     );
 };
 
-exports.getPostsByThreadId = function(threadId) {
+exports.getPostsByThreadId = function({threadId, firstPost, lastPost}) {
     return db.query(
         `
         SELECT posts.*, users.id, first, last, url, (
@@ -279,11 +279,11 @@ exports.getPostsByThreadId = function(threadId) {
         FROM posts
         LEFT JOIN users
         ON poster_id = users.id
-        WHERE thread_id = $1
+        WHERE thread_id = $1 AND posts.id >= $2 AND posts.id <= $3
         ORDER BY posts.id ASC
-        LIMIT 20
+        LIMIT 10
         `,
-        [threadId]
+        [threadId, firstPost, lastPost]
     );
 };
 

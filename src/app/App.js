@@ -104,7 +104,7 @@ export default function App () {
                 />
 
                 <Route
-                    path="/forums/:forumId/:threadId"
+                    path="/forums/:forumId/:threadTitle.:threadId/page-:pageNum"
                     render={props => (
                         <Thread
                             key={props.match.url}

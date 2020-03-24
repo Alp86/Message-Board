@@ -211,9 +211,10 @@ io.on('connection', socket => {
         }).catch(error => console.log("error in getThreads:", error));
     });
 
-    socket.on("getPostsByThreadId", threadId => {
-        console.log("getPostsByThreadId:", threadId);
-        getPostsByThreadId(threadId).then( ({rows}) => {
+    socket.on("getPostsByThreadId", data => {
+        // console.log("threadId:", threadId);
+        getPostsByThreadId(data).then( ({rows}) => {
+            console.log("getPostsByThreadId:", rows);
             socket.emit("receivePostsByThreadId", rows);
         }).catch(error => console.log("error in getPostsByThreadId", error));
     });
