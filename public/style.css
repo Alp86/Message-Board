@@ -286,3 +286,11 @@ input, button {
 .offline {
     background-color: lightgrey;
 }
+
+.clickable {
+    cursor: pointer;
+}
+
+.paginationControls {
+    margin: 10px 0;
+}

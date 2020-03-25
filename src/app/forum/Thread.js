@@ -14,19 +14,17 @@ export default function Thread(props) {
     console.log("props.match.params", props.match.params);
 
     useEffect(() => {
-        let firstPost = props.match.params.pageNum * 10 - 9;
-        let lastPost = props.match.params.pageNum * 10;
+        let offset = props.match.params.threadPage * 10 - 10;
         socket.emit("getPostsByThreadId", {
             threadId: props.match.params.threadId,
-            firstPost: firstPost,
-            lastPost: lastPost
+            offset: offset
         });
 
         window.scrollTo(0, 0)
-    }, [props.match.params.pageNum]);
+    }, [props.match.params]);
 
     const posts = useSelector(state => state.posts);
-    const numPosts = useSelector(state => state.posts && state.posts[0] && state.posts[0].highestPostId);
+    const numPosts = useSelector(state => state.posts && state.posts[0] && state.posts[0].totalPosts);
 
     const dateFormat = dateStr => {
         const [year, month, day] = dateStr.split("T")[0].split("-");
@@ -59,7 +57,7 @@ export default function Thread(props) {
                     history={props.history}
                     match={props.match}
                     numPages={Math.ceil(numPosts / 10)}
-                    currentPage={parseInt(props.match.params.pageNum)}
+                    currentPage={parseInt(props.match.params.threadPage)}
                 />
             }
 
@@ -67,7 +65,7 @@ export default function Thread(props) {
                 <Post
                     children={
 
-                        <div id={index + props.match.params.pageNum * 10 - 9} className="post-container">
+                        <div id={index + props.match.params.threadPage * 10 - 9} className="post-container">
 
                             <div className="post-user">
                                 <ProfilePic
@@ -85,8 +83,8 @@ export default function Thread(props) {
 
                                 <div className="post-info">
                                     <span>{dateFormat(post.created_at)}</span>
-                                    <a href={`#${index + props.match.params.pageNum * 10 - 9}`}>
-                                        #{index + props.match.params.pageNum * 10 - 9}
+                                    <a href={`#${index + props.match.params.threadPage * 10 - 9}`}>
+                                        #{index + props.match.params.threadPage * 10 - 9}
                                     </a>
                                 </div>
 
@@ -104,7 +102,7 @@ export default function Thread(props) {
                     history={props.history}
                     match={props.match}
                     numPages={Math.ceil(numPosts / 10)}
-                    currentPage={parseInt(props.match.params.pageNum)}
+                    currentPage={parseInt(props.match.params.threadPage)}
                 />
             }
         </>

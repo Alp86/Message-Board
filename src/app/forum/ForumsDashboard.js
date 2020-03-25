@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearThreads } from "../../actions";
 import ForumPreview from "./ForumPreview";
 import ForumPanel from "./ForumPanel";
+import BreadCrumbsMenu from "./BreadCrumbsMenu";
 
 export default function ForumsDashboard(props) {
     const dispatch = useDispatch();
@@ -14,7 +15,7 @@ export default function ForumsDashboard(props) {
     const forums = useSelector(state => state.forums);
 
     const clickHandler = id => {
-        props.history.push(`/forums/${id}`);
+        props.history.push(`/forums/${id}/page-1`);
     };
 
     return (
@@ -26,9 +27,9 @@ export default function ForumsDashboard(props) {
                             <div className="forumCard" onClick={() => clickHandler(forum.id)}>
                                 <h1>{forum.title}</h1>
                                 <div className="forumCard-stats">
-                                    <span>Threads: {forum.numberOfThreads}</span>
+                                    <span>Threads: {forum.threadCount}</span>
                                     <span>  </span>
-                                    <span>Posts: {forum.numberOfPosts}</span>
+                                    <span>Posts: {forum.postCount}</span>
                                 </div>
                             </div>
                         }
@@ -38,13 +39,3 @@ export default function ForumsDashboard(props) {
         </>
     )
 }
-
-
-// <ForumPreview
-// key={forum.id}
-// forumId={forum.id}
-// title={forum.title}
-// threads={forum.numberOfThreads}
-// posts={forum.numberOfPosts}
-// history={props.history}
-// />

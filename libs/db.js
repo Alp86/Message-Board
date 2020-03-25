@@ -234,86 +234,87 @@ exports.getPrivateMessages = function(sender_id, receiver_id) {
     );
 };
 
+// exports.getForums = function() {
+//     return db.query(
+//         `
+//         SELECT forums.*, COUNT(threads.id) AS "numberOfThreads", COUNT(posts.id) AS "numberOfPosts"
+//         FROM forums
+//         LEFT JOIN threads
+//         ON forums.id = forum_id
+//         LEFT JOIN posts
+//         ON thread_id = threads.id
+//         GROUP BY forums.id
+//         ORDER BY forums.id ASC
+//         `
+//     );
+// };
+
 exports.getForums = function() {
     return db.query(
         `
-        SELECT forums.*, COUNT(threads.id) AS "numberOfThreads", COUNT(posts.id) AS "numberOfPosts"
-        FROM forums
-        LEFT JOIN threads
-        ON forums.id = forum_id
-        LEFT JOIN posts
-        ON thread_id = threads.id
-        GROUP BY forums.id
-        ORDER BY forums.id ASC
+        SELECT DISTINCT tt.id, tt.title, SUM(tt.tcount) AS "threadCount", SUM(tt.pcount) AS "postCount"
+        FROM (
+            SELECT DISTINCT forums.*, COUNT(t.id) AS "tcount", t.pcount
+            FROM forums
+            LEFT JOIN (
+                SELECT threads.*, COUNT(posts.id) AS "pcount"
+                FROM threads
+                LEFT JOIN posts
+                ON posts.thread_id = threads.id
+                GROUP BY threads.id
+            ) AS t
+            ON t.forum_id = forums.id
+            GROUP BY forums.id, t.pcount
+        ) AS tt
+        GROUP BY tt.id, tt.title
+        ORDER BY tt.id
         `
     );
 };
 
-exports.getThreadsByForumId = function({forumId, firstThread, lastThread}) {
+exports.getThreadsByForumId = function({forumId, offset}) {
     return db.query(
         `
-        SELECT threads.*, users.first, users.last, COUNT(posts.id) AS "numberOfPosts", (
-            SELECT id
+        SELECT threads.*, users.first, users.last, MAX(posts.created_at) AS "lastpost", COUNT(posts.id) AS "numberOfPosts",
+        (
+            SELECT COUNT(threads.id)
             FROM threads
             WHERE forum_id = $1
-            ORDER BY id DESC
-            LIMIT 1
-        ) AS "highestThreadId"
+        ) AS "totalThreads"
         FROM threads
         LEFT JOIN users
         ON users.id = creator_id
         LEFT JOIN posts
         ON thread_id = threads.id
-        WHERE forum_id = $1 AND threads.id >= $2 AND threads.id <= $3
+        WHERE forum_id = $1
         GROUP BY threads.id, users.first, users.last
-        ORDER BY threads.id ASC
+        ORDER BY lastpost DESC NULLS LAST
+        OFFSET $2
         LIMIT 10
         `,
-        [forumId, firstThread, lastThread]
+        [forumId, offset]
     );
 };
 
-exports.getPostsByThreadId = function({threadId, firstPost, lastPost}) {
+exports.getPostsByThreadId = function({threadId, offset}) {
     return db.query(
         `
         SELECT posts.*, users.id, first, last, url, (
-            SELECT id
+            SELECT COUNT(posts.id)
             FROM posts
             WHERE thread_id = $1
-            ORDER BY id DESC
-            LIMIT 1
-        ) AS "highestPostId"
+        ) AS "totalPosts"
         FROM posts
         LEFT JOIN users
         ON poster_id = users.id
-        WHERE thread_id = $1 AND posts.id >= $2 AND posts.id <= $3
+        WHERE thread_id = $1
         ORDER BY posts.id ASC
+        OFFSET $2
         LIMIT 10
         `,
-        [threadId, firstPost, lastPost]
+        [threadId, offset]
     );
 };
-
-// exports.getMorePostsByThreadId = function(threadId, lastPostId) {
-//     return db.query(
-//         `
-//         SELECT posts.*, users.id, first, last, url, (
-//             SELECT id
-//             FROM posts
-//             WHERE thread_id = $1
-//             ORDER BY id DESC
-//             LIMIT 1
-//         ) AS "highestPostId
-//         FROM posts
-//         LEFT JOIN users
-//         ON poster_id = users.id
-//         WHERE thread_id = $1 AND posts.id > lastPostId
-//         ORDER BY posts.id ASC
-//         LIMIT 20
-//         `,
-//         [threadId]
-//     );
-// };
 
 exports.getPostsByUserId = function(userId) {
     return db.query(
@@ -366,3 +367,33 @@ exports.insertReaction = function(postId, userId, reaction) {
         [postId, userId, reaction]
     );
 };
+
+// `
+// SELECT DISTINCT t.id, t.title, COUNT(t.threadid) AS "threadcount", COUNT(t.postid) AS "postcount"
+// FROM (
+//     SELECT DISTINCT forums.*, threads.id AS "threadid", posts.id AS "postid"
+//     FROM forums
+//     LEFT JOIN threads
+//     ON forums.id = threads.forum_id
+//     LEFT JOIN posts
+//     ON threads.id = posts.thread_id
+// ) AS t
+// GROUP BY t.id, t.title;
+// `
+// `
+// SELECT DISTINCT tt.id, tt.title, SUM(tt.tcount) AS "tcount", SUM(tt.pcount) AS "pcount"
+// FROM (
+//     SELECT DISTINCT forums.*, COUNT(t.id) AS "tcount", t.pcount
+//     FROM forums
+//     LEFT JOIN (
+//         SELECT threads.*, COUNT(posts.id) AS "pcount"
+//         FROM threads
+//         LEFT JOIN posts
+//         ON posts.thread_id = threads.id
+//         GROUP BY threads.id
+//     ) AS t
+//     ON t.forum_id = forums.id
+//     GROUP BY forums.id, t.pcount
+// ) AS tt
+// GROUP BY tt.id
+// `

@@ -93,7 +93,7 @@ export default function App () {
                 />
 
                 <Route
-                    exact path="/forums/:forumId"
+                    exact path="/forums/:forumId/page-:forumPage"
                     render={props => (
                         <Forum
                             key={props.match.url}
@@ -104,7 +104,7 @@ export default function App () {
                 />
 
                 <Route
-                    path="/forums/:forumId/:threadTitle.:threadId/page-:pageNum"
+                    path="/forums/:forumId/:threadTitle.:threadId/page-:threadPage"
                     render={props => (
                         <Thread
                             key={props.match.url}

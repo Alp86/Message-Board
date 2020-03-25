@@ -25,11 +25,14 @@ export default function PaginationControls(props) {
 
 
     return (
-        <div className={classes.root}>
+        <div className={`${classes.root} paginationControls`}>
             <Pagination
                 count={props.numPages}
                 page={page}
                 siblingCount={2}
+                hidePrevButton={props.hidePrevNext}
+                hideNextButton={props.hidePrevNext}
+                color="secondary"
                 onChange={handleChange}
             />
         </div>
