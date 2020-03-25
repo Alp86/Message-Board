@@ -2,7 +2,7 @@ import * as io from 'socket.io-client';
 
 import {
     chatMessages, chatMessage, usersOnline, userIsOnline, userIsOffline,
-    receiveFriends, privateMessage, privateMessages, receiveForums, receiveThreads,
+    receiveFriends, privateMessage, privateMessages, receiveForums, receiveThreadsByForumId,
     receivePostsByThreadId
 } from './actions';
 
@@ -100,10 +100,10 @@ export const init = store => {
         );
 
         socket.on(
-            'getThreads',
+            'receiveThreadsByForumId',
             threadsObj => {
                 store.dispatch(
-                    receiveThreads(threadsObj)
+                    receiveThreadsByForumId(threadsObj)
                 );
             }
         );

@@ -249,20 +249,27 @@ exports.getForums = function() {
     );
 };
 
-exports.getThreads = function(forumId) {
+exports.getThreadsByForumId = function({forumId, firstThread, lastThread}) {
     return db.query(
         `
-        SELECT threads.*, users.first, users.last, COUNT(posts.id) AS "numberOfPosts"
+        SELECT threads.*, users.first, users.last, COUNT(posts.id) AS "numberOfPosts", (
+            SELECT id
+            FROM threads
+            WHERE forum_id = $1
+            ORDER BY id DESC
+            LIMIT 1
+        ) AS "highestThreadId"
         FROM threads
         LEFT JOIN users
         ON users.id = creator_id
         LEFT JOIN posts
         ON thread_id = threads.id
-        WHERE forum_id = $1
+        WHERE forum_id = $1 AND threads.id >= $2 AND threads.id <= $3
         GROUP BY threads.id, users.first, users.last
         ORDER BY threads.id ASC
+        LIMIT 10
         `,
-        [forumId]
+        [forumId, firstThread, lastThread]
     );
 };
 
@@ -287,26 +294,26 @@ exports.getPostsByThreadId = function({threadId, firstPost, lastPost}) {
     );
 };
 
-exports.getMorePostsByThreadId = function(threadId, lastPostId) {
-    return db.query(
-        `
-        SELECT posts.*, users.id, first, last, url, (
-            SELECT id
-            FROM posts
-            WHERE thread_id = $1
-            ORDER BY id DESC
-            LIMIT 1
-        ) AS "highestPostId
-        FROM posts
-        LEFT JOIN users
-        ON poster_id = users.id
-        WHERE thread_id = $1 AND posts.id > lastPostId
-        ORDER BY posts.id ASC
-        LIMIT 20
-        `,
-        [threadId]
-    );
-};
+// exports.getMorePostsByThreadId = function(threadId, lastPostId) {
+//     return db.query(
+//         `
+//         SELECT posts.*, users.id, first, last, url, (
+//             SELECT id
+//             FROM posts
+//             WHERE thread_id = $1
+//             ORDER BY id DESC
+//             LIMIT 1
+//         ) AS "highestPostId
+//         FROM posts
+//         LEFT JOIN users
+//         ON poster_id = users.id
+//         WHERE thread_id = $1 AND posts.id > lastPostId
+//         ORDER BY posts.id ASC
+//         LIMIT 20
+//         `,
+//         [threadId]
+//     );
+// };
 
 exports.getPostsByUserId = function(userId) {
     return db.query(

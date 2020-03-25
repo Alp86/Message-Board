@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { socket } from "../../socket";
 import Post from "./Post";
 import ProfilePic from "../ProfilePic";
-import Navigation from "./Navigation";
 import PaginationControls from "./Pagination";
 
 export default function Thread(props) {
@@ -27,7 +26,7 @@ export default function Thread(props) {
     }, [props.match.params.pageNum]);
 
     const posts = useSelector(state => state.posts);
-    const numPosts = useSelector(state => state.posts && state.posts[0].highestPostId);
+    const numPosts = useSelector(state => state.posts && state.posts[0] && state.posts[0].highestPostId);
 
     const dateFormat = dateStr => {
         const [year, month, day] = dateStr.split("T")[0].split("-");
@@ -39,6 +38,16 @@ export default function Thread(props) {
             hour12: true, timeZone: 'Europe/Berlin'
         };
         return new Intl.DateTimeFormat('en-US', options).format(date);
+    };
+
+    const checkOnlineStatus = posterId => {
+        let onlineStatus = "offline";
+        usersOnline.map(user => {
+            if (posterId === user.id) {
+                onlineStatus = "online"
+            }
+        })
+        return onlineStatus;
     };
 
     return (
@@ -69,13 +78,7 @@ export default function Thread(props) {
 
                                 />
                                 <span>{post.first} {post.last}</span>
-
-                                {usersOnline.map(user =>
-                                    user.id == post.poster_id &&
-                                    <div className={`online-status online`}></div> ||
-                                    <div className={`online-status offline`}></div>
-                                )}
-
+                                <span className={`online-status ${checkOnlineStatus(post.poster_id)}`}></span>
                             </div>
 
                             <div className="post-content-container">
@@ -107,9 +110,3 @@ export default function Thread(props) {
         </>
     )
 }
-
-
-// {
-//     posts && parseInt(posts[0]["highestPostId"]) > parseInt(posts[posts.length-1].id) &&
-//     <p>more posts</p>
-// }

@@ -10,7 +10,7 @@ const csurf = require('csurf');
 const compression = require('compression');
 const {
     getUserById, insertChatMessage, getLastTenChatMessages, getPrivateMessages, insertPrivateMessage,
-    getForums, getThreads, getPostsByThreadId, getPostsByUserId
+    getForums, getThreadsByForumId, getPostsByThreadId, getPostsByUserId
 } = require('./libs/db');
 
 app.use(compression());
@@ -205,15 +205,16 @@ io.on('connection', socket => {
         }
     });
 
-    socket.on("getThreads", forumId => {
-        getThreads(forumId).then(({rows}) => {
-            socket.emit("getThreads", rows);
-        }).catch(error => console.log("error in getThreads:", error));
+    socket.on("getThreadsByForumId", forumData => {
+        getThreadsByForumId(forumData).then(({rows}) => {
+            console.log("getThreadsByForumId:", rows);
+            socket.emit("receiveThreadsByForumId", rows);
+        }).catch(error => console.log("error in getThreadsByForumId:", error));
     });
 
-    socket.on("getPostsByThreadId", data => {
+    socket.on("getPostsByThreadId", threadData => {
         // console.log("threadId:", threadId);
-        getPostsByThreadId(data).then( ({rows}) => {
+        getPostsByThreadId(threadData).then( ({rows}) => {
             console.log("getPostsByThreadId:", rows);
             socket.emit("receivePostsByThreadId", rows);
         }).catch(error => console.log("error in getPostsByThreadId", error));

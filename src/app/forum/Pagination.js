@@ -15,7 +15,11 @@ export default function PaginationControls(props) {
     const [page, setPage] = React.useState(props.currentPage);
     const handleChange = (event, value) => {
         setPage(value);
-        props.history.push(`/forums/${props.match.params.forumId}/${props.match.params.threadTitle}.${props.match.params.threadId}/page-${value}`);
+        if (props.link) {
+            props.history.push(`${props.link}${value}`);
+        } else {
+            props.history.push(`/forums/${props.match.params.forumId}/${props.match.params.threadTitle}.${props.match.params.threadId}/page-${value}`);
+        }
     };
 
 

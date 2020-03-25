@@ -121,7 +121,7 @@ export default function(state = {}, action) {
         };
     }
 
-    if (action.type === "RECEIVE_THREADS") {
+    if (action.type === "RECEIVE_THREADS_BY_FORUM_ID") {
         state = {
             ...state,
             threads: action.threads

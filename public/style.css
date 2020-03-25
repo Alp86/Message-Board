@@ -280,9 +280,9 @@ input, button {
 }
 
 .online {
-    background-color: green;
+    background-color: lightgreen;
 }
 
 .offline {
-    background-color: grey;
+    background-color: lightgrey;
 }

@@ -9,10 +9,15 @@ export default function Forum(props) {
 
     // get threads
     useEffect(() => {
-        socket.emit("getThreads", props.match.params.forumId);
+        socket.emit("getThreadsByForumId", {
+            forumId: props.match.params.forumId,
+            firstThread: 1,
+            lastThread: 10
+        });
     },[])
 
     const threads = useSelector(state => state.threads);
+    const numThreads = useSelector(state => state.threads && state.threads[0] && state.threads[0].highestThreadId)
 
     const dateFormat = dateStr => {
         const [year, month, day] = dateStr.split("T")[0].split("-");
@@ -35,11 +40,20 @@ export default function Forum(props) {
         {threads && threads.map(thread => (
             <ThreadPanel
                 children={
-                    <div onClick={() => clickHandler({title: thread.title, id: thread.id})}>
-                        <h3>{thread.title}</h3>
+                    <div>
+                        <h3 onClick={() => clickHandler({title: thread.title, id: thread.id})}>{thread.title}</h3>
                         <span>Started by {thread.first} {thread.last} </span>
                         <span>on {dateFormat(thread.created_at)}  </span>
                         <span>Posts: {thread.numberOfPosts}</span>
+                        {thread.numberOfPosts > 10 &&
+                            <PaginationControls
+                                history={props.history}
+                                match={props.match}
+                                numPages={Math.ceil(thread.numberOfPosts / 10)}
+                                currentPage={parseInt(props.match.params.pageNum)}
+                                link={`/forums/${props.match.params.forumId}/${thread.title.split(" ").join("-")}.${thread.id}/page-`}
+                            />
+                        }
                     </div>
                 }
             />

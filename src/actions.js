@@ -133,10 +133,10 @@ export function receiveForums(forumsObj) {
     };
 }
 
-export function receiveThreads(threadsObj) {
-    console.log("receiveThreads running");
+export function receiveThreadsByForumId(threadsObj) {
+    console.log("receiveThreadsByForumId running");
     return {
-        type: "RECEIVE_THREADS",
+        type: "RECEIVE_THREADS_BY_FORUM_ID",
         threads: threadsObj
     };
 }
