@@ -42,9 +42,14 @@ export default function Reply(props) {
         // dispatch action
         dispatch(newPost({
             threadId: props.match.params.threadId,
-            post: reply
+            post: reply,
+            quoted_posts: [{
+                ...props.quoted_post,
+                hashId: props.hashId
+            }]
         }));
         setReply("");
+        setVisibility(false);
     }
 
     return (

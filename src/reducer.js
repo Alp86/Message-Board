@@ -135,6 +135,13 @@ export default function(state = {}, action) {
         };
     }
 
+    if (action.type === "CLEAR_POSTS") {
+        state = {
+            ...state,
+            posts: action.posts
+        };
+    }
+
     if (action.type === "RECEIVE_POSTS_BY_THREAD_ID") {
         state = {
             ...state,

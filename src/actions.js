@@ -148,6 +148,13 @@ export function clearThreads() {
     };
 }
 
+export function clearPosts() {
+    return {
+        type: "CLEAR_POSTS",
+        posts: []
+    };
+}
+
 export function receivePostsByThreadId(postsObj) {
     console.log("Receiving posts by threadId:", postsObj);
     return {

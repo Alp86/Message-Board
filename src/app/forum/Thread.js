@@ -1,18 +1,41 @@
 import React, { useState, useEffect } from "react";
+
 import { HashRouter, Route, Link } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { socket } from "../../socket";
+import { clearPosts } from "../../actions";
+
 import Post from "./Post";
 import ProfilePic from "../ProfilePic";
 import PaginationControls from "./Pagination";
 import ReplyBox from "./ReplyBox";
 import ReplyButton from "./ReplyButton";
+import LinkIcon from '@material-ui/icons/Link';
+
+import { makeStyles } from '@material-ui/core/styles';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+const useStyles = makeStyles(theme => ({
+    root: {
+        width: '100%',
+    },
+    heading: {
+        fontSize: theme.typography.pxToRem(15),
+        fontWeight: theme.typography.fontWeightRegular,
+    },
+}));
 
 export default function Thread(props) {
+    const classes = useStyles();
+
     const usersOnline = useSelector(
         state => state && state.usersOnline
     );
 
+    const dispatch = useDispatch();
     console.log("props.match.params", props.match.params);
 
     useEffect(() => {
@@ -23,6 +46,10 @@ export default function Thread(props) {
         });
 
         window.scrollTo(0, 0);
+
+        return () => {
+            dispatch(clearPosts());
+        }
     }, [props.match.params]);
 
     const posts = useSelector(state => state.posts);
@@ -31,10 +58,10 @@ export default function Thread(props) {
     const dateFormat = dateStr => {
         const [year, month, day] = dateStr.split("T")[0].split("-");
         const [hours, minutes, seconds] = dateStr.split("T")[1].split(".")[0].split(":");
-        const date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+        const date = new Date(Date.UTC(year, `${parseInt(month)-1}`, day, hours, minutes));
         const options = {
             year: 'numeric', month: 'numeric', day: 'numeric',
-            hour: 'numeric', minute: 'numeric', second: 'numeric',
+            hour: 'numeric', minute: 'numeric',
             hour12: true, timeZone: 'Europe/Berlin'
         };
         return new Intl.DateTimeFormat('en-US', options).format(date);
@@ -65,6 +92,7 @@ export default function Thread(props) {
 
             {posts && posts.map((post, index) => (
                 <Post
+                    width={100}
                     children={
 
                         <div id={index + props.match.params.threadPage * 10 - 9} className="post-container">
@@ -92,12 +120,42 @@ export default function Thread(props) {
                                         </a>
                                     </div>
 
-                                    <div className="post-content">{post.content}</div>
+                                    <div className="post-content">
+                                        {post.quoted_posts && post.quoted_posts.map(quote => (
+
+                                                    <ExpansionPanel>
+                                                        <ExpansionPanelSummary
+                                                            expandIcon={<ExpandMoreIcon />}
+                                                            aria-controls="panel1a-content"
+                                                            id="panel1a-header"
+                                                        >
+                                                            <div className="quote-info">
+                                                                <span>{quote.first} {quote.last} wrote on </span>
+                                                                <span>{dateFormat(quote.created_at)} </span>
+                                                                <a href={quote.hashId}>
+                                                                    <LinkIcon />
+                                                                </a>
+                                                            </div>
+                                                        </ExpansionPanelSummary>
+
+                                                        <ExpansionPanelDetails>
+                                                            <div className="quote-content">{quote.content}</div>
+                                                        </ExpansionPanelDetails>
+                                                    </ExpansionPanel>
+
+                                        ))}
+                                        <p>{post.content}</p>
+                                    </div>
                                 </div>
 
                             </div>
 
-                            <ReplyButton />
+                            <ReplyButton
+                                history={props.history}
+                                match={props.match}
+                                quoted_post={post}
+                                hashId={`${props.match.url}#${index + props.match.params.threadPage * 10 - 9}`}
+                            />
 
                         </div>
                     }
@@ -119,3 +177,9 @@ export default function Thread(props) {
         </>
     )
 }
+
+                                            // <Post
+                                            //     width={50}
+                                            //     children={
+                                    //     }
+                                    // />

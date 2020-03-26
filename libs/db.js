@@ -348,14 +348,14 @@ exports.insertThread = function(forumId, userId, title) {
     );
 };
 
-exports.insertPost = function(threadId, userId, content) {
+exports.insertPost = function(threadId, userId, content, quoted_posts) {
     return db.query(
         `
-        INSERT INTO posts (thread_id, poster_id, content)
-        VALUES ($1, $2, $3)
-        Returning id, thread_id, poster_id, content, created_at 
+        INSERT INTO posts (thread_id, poster_id, content, quoted_posts)
+        VALUES ($1, $2, $3, $4)
+        Returning id, thread_id, poster_id, content, quoted_posts, created_at 
         `,
-        [threadId, userId, content]
+        [threadId, userId, content, quoted_posts]
     );
 };
 

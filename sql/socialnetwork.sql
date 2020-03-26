@@ -55,6 +55,7 @@ CREATE TABLE posts (
     thread_id INT NOT NULL REFERENCES threads(id),
     poster_id INT NOT NULL REFERENCES users(id),
     content VARCHAR NOT NULL,
+    quoted_posts JSON,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

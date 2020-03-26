@@ -78,19 +78,17 @@ require("./routes/social");
 
 app.post("/new-post", async (req, res) => {
     const userId = req.session.user.id;
-    const { threadId, post } = req.body;
+    const { threadId, post, quoted_posts } = req.body;
     const results = await Promise.all([
         getUserById(userId),
-        insertPost(threadId, userId, post)
+        insertPost(threadId, userId, post, JSON.stringify(quoted_posts))
     ]);
 
     console.log("POST new-post results:", results[0].rows[0]);
 
     res.json({
         ...results[1].rows[0],
-        first: results[0].rows[0].first,
-        last: results[0].rows[0].last,
-        url: results[0].rows[0].url
+        ...results[0].rows[0]
     });
 });
 
