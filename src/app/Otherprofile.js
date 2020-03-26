@@ -70,10 +70,10 @@ export default function OtherProfile(props) {
     const dateFormat = dateStr => {
         const [year, month, day] = dateStr.split("T")[0].split("-");
         const [hours, minutes, seconds] = dateStr.split("T")[1].split(".")[0].split(":");
-        const date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+        const date = new Date(Date.UTC(year, `${parseInt(month)-1}`, day, hours, minutes));
         const options = {
             year: 'numeric', month: 'numeric', day: 'numeric',
-            hour: 'numeric', minute: 'numeric', second: 'numeric',
+            hour: 'numeric', minute: 'numeric',
             hour12: true, timeZone: 'Europe/Berlin'
         };
         return new Intl.DateTimeFormat('en-US', options).format(date);
@@ -121,57 +121,6 @@ export default function OtherProfile(props) {
 
                 </div>
             }
-
         </>
     )
-
 }
-
-
-
-// export default class OtherProfile extends React.Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = {};
-//     }
-//
-//     componentDidMount() {
-//         axios.get(`/user/${this.props.match.params.id}.json`).then(
-//             ({data}) => {
-//                 if (data.redirectTo == '/') { // if the server says the id in the url belongs to the logged in user (optional)
-//                     this.props.history.push('/');
-//                 } else if (data.error) { // some test to determine a user was not found
-//                     console.log("error: user doesn't exist");
-//                     this.setState({
-//                         error: true
-//                     });
-//                 } else {
-//                     // console.log("data:", data);
-//                     this.setState({ ...data}, () => console.log("this.state:",this.state));
-//                 }
-//             }
-//         );
-//     }
-//
-//     render() {
-//         return (
-//             <>
-//                 {
-//                     !this.state.error && this.state.id &&
-//                     <div>
-//                         <img
-//                             src={this.state.url}
-//                             alt={`${this.state.first} ${this.state.last}`}
-//                         />
-//                         <FriendButton otherUserId={this.state.id} />
-//                         <p>{this.state.bio}</p>
-//                     </div>
-//                 }
-//
-//                 // check if otherUser is friend
-//
-//
-//             </>
-//         );
-//     }
-// }

@@ -130,8 +130,7 @@ export default function Thread(props) {
                                                             id="panel1a-header"
                                                         >
                                                             <div className="quote-info">
-                                                                <span>{quote.first} {quote.last} wrote on </span>
-                                                                <span>{dateFormat(quote.created_at)} </span>
+                                                                <span>{quote.first} {quote.last} wrote on {dateFormat(quote.created_at)}</span>
                                                                 <a href={quote.hashId}>
                                                                     <LinkIcon />
                                                                 </a>

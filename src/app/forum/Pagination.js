@@ -32,7 +32,7 @@ export default function PaginationControls(props) {
                 siblingCount={2}
                 hidePrevButton={props.hidePrevNext}
                 hideNextButton={props.hidePrevNext}
-                color="secondary"
+                color="primary"
                 onChange={handleChange}
             />
         </div>

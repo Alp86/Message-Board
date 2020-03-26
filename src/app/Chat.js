@@ -37,10 +37,10 @@ export default function Chat() {
     const dateFormat = dateStr => {
         const [year, month, day] = dateStr.split("T")[0].split("-");
         const [hours, minutes, seconds] = dateStr.split("T")[1].split(".")[0].split(":");
-        const date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+        const date = new Date(Date.UTC(year, `${parseInt(month)-1}`, day, hours, minutes));
         const options = {
             year: 'numeric', month: 'numeric', day: 'numeric',
-            hour: 'numeric', minute: 'numeric', second: 'numeric',
+            hour: 'numeric', minute: 'numeric',
             hour12: true, timeZone: 'Europe/Berlin'
         };
         return new Intl.DateTimeFormat('en-US', options).format(date);

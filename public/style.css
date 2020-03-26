@@ -320,3 +320,9 @@ input, button {
     display: flex;
     justify-content: flex-end;
 }
+
+.quote-info {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}

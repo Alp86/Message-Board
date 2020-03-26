@@ -4,17 +4,32 @@ import {  } from "../../actions";
 import { socket } from "../../socket";
 import ThreadPanel from "./ThreadPanel";
 import PaginationControls from "./Pagination";
+import LibraryAddIcon from '@material-ui/icons/LibraryAdd';
+import { makeStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+
+const useStyles = makeStyles(theme => ({
+    root: {
+        '& > *': {
+            margin: theme.spacing(1),
+        },
+    },
+}));
+
+
 
 export default function Forum(props) {
+    const classes = useStyles();
 
-    // get threads
     useEffect(() => {
         let offset = props.match.params.forumPage * 10 - 10;
+
         socket.emit("getThreadsByForumId", {
             forumId: props.match.params.forumId,
             offset: offset
         });
-        window.scrollTo(0, 0)
+
+        window.scrollTo(0, 0);
     },[props.match.params])
 
     const threads = useSelector(state => state.threads);
@@ -23,10 +38,10 @@ export default function Forum(props) {
     const dateFormat = dateStr => {
         const [year, month, day] = dateStr.split("T")[0].split("-");
         const [hours, minutes, seconds] = dateStr.split("T")[1].split(".")[0].split(":");
-        const date = new Date(Date.UTC(year, month, day, hours, minutes, seconds));
+        const date = new Date(Date.UTC(year, `${parseInt(month)-1}`, day, hours, minutes));
         const options = {
             year: 'numeric', month: 'numeric', day: 'numeric',
-            hour: 'numeric', minute: 'numeric', second: 'numeric',
+            hour: 'numeric', minute: 'numeric',
             hour12: true, timeZone: 'Europe/Berlin'
         };
         return new Intl.DateTimeFormat('en-US', options).format(date);
@@ -36,10 +51,15 @@ export default function Forum(props) {
         props.history.push(`/forums/${props.match.params.forumId}/${thread.title.split(" ").join("-")}.${thread.id}/page-1`);
     };
 
+    const newThread = e => {
+        e.preventDefault();
+        console.log("I've been clicked", e);
+    };
+
     return (
         <>
         {
-            numThreads && numThreads > 1 &&
+            numThreads && numThreads > 10 &&
             <PaginationControls
                 history={props.history}
                 match={props.match}
@@ -48,6 +68,13 @@ export default function Forum(props) {
                 currentPage={parseInt(props.match.params.forumPage)}
             />
         }
+
+        <div>
+            <Button variant="outlined" color="primary" startIcon={<LibraryAddIcon />} onClick={newThread}>
+                Post new thread
+            </Button>
+        </div>
+
         {threads && threads.map(thread => (
             <ThreadPanel
                 children={
@@ -70,6 +97,17 @@ export default function Forum(props) {
                 }
             />
         ))}
+
+        {
+            numThreads && numThreads > 10 &&
+            <PaginationControls
+                history={props.history}
+                match={props.match}
+                numPages={Math.ceil(threads.length / 10) || 1}
+                hidePrevNext={false}
+                currentPage={parseInt(props.match.params.forumPage)}
+            />
+        }
         </>
     )
 }
