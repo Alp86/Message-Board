@@ -15,6 +15,7 @@ import UsersOnline from "./UsersOnline";
 import ForumsDashboard from "./forum/ForumsDashboard";
 import Forum from "./forum/Forum";
 import Thread from "./forum/Thread";
+import BreadCrumbsMenu from "./forum/BreadCrumbsMenu";
 
 export default function App () {
 
@@ -78,6 +79,17 @@ export default function App () {
                     path="/users-online"
                     render={props => (
                         <UsersOnline
+                            history={props.history}
+                        />
+                    )}
+                />
+
+                <Route
+                    path="/forums/"
+                    render={props => (
+                        <BreadCrumbsMenu
+                            key={props.match.url}
+                            match={props.match}
                             history={props.history}
                         />
                     )}

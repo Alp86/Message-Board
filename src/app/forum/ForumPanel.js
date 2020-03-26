@@ -19,7 +19,7 @@ export default function ForumPanel(props) {
     const classes = useStyles();
 
     const [elevation, setElevation] = useState(3);
-    const onMouseOver = () => {setElevation(6);};
+    const onMouseOver = () => {setElevation(10);};
     const onMouseOut = () => {setElevation(3);};
 
     return (

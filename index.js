@@ -10,7 +10,7 @@ const csurf = require('csurf');
 const compression = require('compression');
 const {
     getUserById, insertChatMessage, getLastTenChatMessages, getPrivateMessages, insertPrivateMessage,
-    getForums, getThreadsByForumId, getPostsByThreadId, getPostsByUserId
+    getForums, getThreadsByForumId, getPostsByThreadId, getPostsByUserId, insertPost
 } = require('./libs/db');
 
 app.use(compression());
@@ -75,6 +75,24 @@ exports.app = app;
 require("./routes/auth");
 require("./routes/profile");
 require("./routes/social");
+
+app.post("/new-post", async (req, res) => {
+    const userId = req.session.user.id;
+    const { threadId, post } = req.body;
+    const results = await Promise.all([
+        getUserById(userId),
+        insertPost(threadId, userId, post)
+    ]);
+
+    console.log("POST new-post results:", results[0].rows[0]);
+
+    res.json({
+        ...results[1].rows[0],
+        first: results[0].rows[0].first,
+        last: results[0].rows[0].last,
+        url: results[0].rows[0].url
+    });
+});
 
 app.get('*', function(req, res) {
     res.sendFile(__dirname + '/index.html');
@@ -219,5 +237,6 @@ io.on('connection', socket => {
             socket.emit("receivePostsByThreadId", rows);
         }).catch(error => console.log("error in getPostsByThreadId", error));
     });
+
 
 });

@@ -142,5 +142,15 @@ export default function(state = {}, action) {
         };
     }
 
+    if (action.type === "NEW_POST") {
+        state = {
+            ...state,
+            posts: [
+                ...state.posts,
+                action.post
+            ]
+        };
+    }
+
     return state;
 }

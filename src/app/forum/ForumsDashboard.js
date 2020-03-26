@@ -20,11 +20,11 @@ export default function ForumsDashboard(props) {
 
     return (
         <>
-            <div id="forums">
+            <div className="forums">
                 {forums && forums.map(forum => (
                     <ForumPanel
                         children={
-                            <div className="forumCard" onClick={() => clickHandler(forum.id)}>
+                            <div className="forumCard clickable" onClick={() => clickHandler(forum.id)}>
                                 <h1>{forum.title}</h1>
                                 <div className="forumCard-stats">
                                     <span>Threads: {forum.threadCount}</span>

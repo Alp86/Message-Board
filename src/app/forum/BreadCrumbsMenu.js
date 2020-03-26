@@ -19,12 +19,17 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-function handleClick(event) {
-    event.preventDefault();
-    console.info('You clicked a breadcrumb.');
-}
 
 export default function BreadCrumbsMenu(props) {
+
+    function handleClick(e) {
+        e.preventDefault();
+        console.info('You clicked a breadcrumb.', props.match);
+        if (e.target.text === "Forums") {
+            props.history.push("/forums");
+        }
+    }
+
     const classes = useStyles();
 
     return (
@@ -32,29 +37,14 @@ export default function BreadCrumbsMenu(props) {
 
             <Link
                 color="inherit"
-                to="/forums"
+                href="/forums"
                 onClick={handleClick}
                 className={classes.link}
             >
                 <HomeIcon className={classes.icon} />
                 Forums
             </Link>
-
-
-            <Link
-                color="inherit"
-                href="/getting-started/installation/"
-                onClick={handleClick}
-                className={classes.link}
-            >
-                <WhatshotIcon className={classes.icon} />
-                Core
-            </Link>
-
-            <Typography color="textPrimary" className={classes.link}>
-                <GrainIcon className={classes.icon} />
-                Breadcrumb
-            </Typography>
+            
         </Breadcrumbs>
     );
 }

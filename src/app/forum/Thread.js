@@ -5,6 +5,8 @@ import { socket } from "../../socket";
 import Post from "./Post";
 import ProfilePic from "../ProfilePic";
 import PaginationControls from "./Pagination";
+import ReplyBox from "./ReplyBox";
+import ReplyButton from "./ReplyButton";
 
 export default function Thread(props) {
     const usersOnline = useSelector(
@@ -20,7 +22,7 @@ export default function Thread(props) {
             offset: offset
         });
 
-        window.scrollTo(0, 0)
+        window.scrollTo(0, 0);
     }, [props.match.params]);
 
     const posts = useSelector(state => state.posts);
@@ -67,30 +69,35 @@ export default function Thread(props) {
 
                         <div id={index + props.match.params.threadPage * 10 - 9} className="post-container">
 
-                            <div className="post-user">
-                                <ProfilePic
-                                    id={post.poster_id}
-                                    url={post.url}
-                                    first={post.first}
-                                    last={post.last}
+                            <div className="post-user-and-content-container">
 
-                                />
-                                <span>{post.first} {post.last}</span>
-                                <span className={`online-status ${checkOnlineStatus(post.poster_id)}`}></span>
-                            </div>
+                                <div className="post-user">
+                                    <ProfilePic
+                                        id={post.poster_id}
+                                        url={post.url}
+                                        first={post.first}
+                                        last={post.last}
 
-                            <div className="post-content-container">
-
-                                <div className="post-info">
-                                    <span>{dateFormat(post.created_at)}</span>
-                                    <a href={`#${index + props.match.params.threadPage * 10 - 9}`}>
-                                        #{index + props.match.params.threadPage * 10 - 9}
-                                    </a>
+                                    />
+                                    <span>{post.first} {post.last}</span>
+                                    <span className={`online-status ${checkOnlineStatus(post.poster_id)}`}></span>
                                 </div>
 
-                                <div className="post-content">{post.content}</div>
+                                <div className="post-content-container">
+
+                                    <div className="post-info">
+                                        <span>{dateFormat(post.created_at)}</span>
+                                        <a href={`#${index + props.match.params.threadPage * 10 - 9}`}>
+                                            #{index + props.match.params.threadPage * 10 - 9}
+                                        </a>
+                                    </div>
+
+                                    <div className="post-content">{post.content}</div>
+                                </div>
 
                             </div>
+
+                            <ReplyButton />
 
                         </div>
                     }
@@ -105,6 +112,10 @@ export default function Thread(props) {
                     currentPage={parseInt(props.match.params.threadPage)}
                 />
             }
+            <ReplyBox
+                history={props.history}
+                match={props.match}
+            />
         </>
     )
 }
