@@ -242,8 +242,10 @@ input, button {
 }
 
 .forums {
+    width: 80%;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 
 .post-container {
@@ -325,4 +327,16 @@ input, button {
     width: 100%;
     display: flex;
     justify-content: space-between;
+}
+
+.new-thread-container {
+    /* width: 100%; */
+    padding: 20px;
+}
+
+#main-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 100px;
+    padding-right: 100px;
 }

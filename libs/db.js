@@ -343,6 +343,7 @@ exports.insertThread = function(forumId, userId, title) {
         `
         INSERT INTO threads (forum_id, creator_id, title)
         VALUES ($1, $2, $3)
+        Returning id
         `,
         [forumId, userId, title]
     );
@@ -353,7 +354,7 @@ exports.insertPost = function(threadId, userId, content, quoted_posts) {
         `
         INSERT INTO posts (thread_id, poster_id, content, quoted_posts)
         VALUES ($1, $2, $3, $4)
-        Returning id, thread_id, poster_id, content, quoted_posts, created_at 
+        Returning id, thread_id, poster_id, content, quoted_posts, created_at
         `,
         [threadId, userId, content, quoted_posts]
     );
@@ -369,32 +370,19 @@ exports.insertReaction = function(postId, userId, reaction) {
     );
 };
 
-// `
-// SELECT DISTINCT t.id, t.title, COUNT(t.threadid) AS "threadcount", COUNT(t.postid) AS "postcount"
-// FROM (
-//     SELECT DISTINCT forums.*, threads.id AS "threadid", posts.id AS "postid"
-//     FROM forums
-//     LEFT JOIN threads
-//     ON forums.id = threads.forum_id
-//     LEFT JOIN posts
-//     ON threads.id = posts.thread_id
-// ) AS t
-// GROUP BY t.id, t.title;
-// `
-// `
-// SELECT DISTINCT tt.id, tt.title, SUM(tt.tcount) AS "tcount", SUM(tt.pcount) AS "pcount"
-// FROM (
-//     SELECT DISTINCT forums.*, COUNT(t.id) AS "tcount", t.pcount
-//     FROM forums
-//     LEFT JOIN (
-//         SELECT threads.*, COUNT(posts.id) AS "pcount"
-//         FROM threads
-//         LEFT JOIN posts
-//         ON posts.thread_id = threads.id
-//         GROUP BY threads.id
-//     ) AS t
-//     ON t.forum_id = forums.id
-//     GROUP BY forums.id, t.pcount
-// ) AS tt
-// GROUP BY tt.id
-// `
+exports.getTopTenThreads = function() {
+    return db.query(
+        `
+        SELECT DISTINCT t.thread_id, threads.title, max(t.created_at)
+        FROM (
+            SELECT posts.id, posts.poster_id, posts.thread_id, posts.created_at
+            FROM posts
+            ORDER BY posts.created_at
+        ) AS t
+        LEFT JOIN threads
+        ON t.thread_id = threads.id
+        GROUP BY t.thread_id, threads.title
+        LIMIT 10;
+        `
+    );
+};

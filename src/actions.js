@@ -166,7 +166,7 @@ export function receivePostsByThreadId(postsObj) {
 export async function newPost(post) {
     console.log("newPost running:");
     const { data } = await axios.post("/new-post", post);
-    console.log("newPost post:", data);
+    console.log("newPost data:", data);
     return {
         type: "NEW_POST",
         post: data

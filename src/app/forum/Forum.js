@@ -48,12 +48,13 @@ export default function Forum(props) {
     };
 
     const clickHandler = thread => {
-        props.history.push(`/forums/${props.match.params.forumId}/${thread.title.split(" ").join("-")}.${thread.id}/page-1`);
+        props.history.push(`/forums/${props.match.params.forumId}/${thread.title.replace(/\W/g, ' ').split(" ").join("-")}.${thread.id}/page-1`);
     };
 
     const newThread = e => {
         e.preventDefault();
         console.log("I've been clicked", e);
+        props.history.push(`/forums/${props.match.params.forumId}/new-thread`);
     };
 
     return (
@@ -90,7 +91,7 @@ export default function Forum(props) {
                                 numPages={Math.ceil(thread.numberOfPosts / 10) || 1}
                                 currentPage={1}
                                 hidePrevNext={true}
-                                link={`/forums/${props.match.params.forumId}/${thread.title.split(" ").join("-")}.${thread.id}/page-`}
+                                link={`/forums/${props.match.params.forumId}/${thread.title.replace(/\W/g, ' ').split(" ").join("-")}.${thread.id}/page-`}
                             />
 
                     </div>

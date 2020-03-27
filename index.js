@@ -10,7 +10,7 @@ const csurf = require('csurf');
 const compression = require('compression');
 const {
     getUserById, insertChatMessage, getLastTenChatMessages, getPrivateMessages, insertPrivateMessage,
-    getForums, getThreadsByForumId, getPostsByThreadId, getPostsByUserId, insertPost
+    getForums, getThreadsByForumId, getPostsByThreadId, getPostsByUserId, insertPost, insertThread
 } = require('./libs/db');
 
 app.use(compression());
@@ -90,6 +90,19 @@ app.post("/new-post", async (req, res) => {
         ...results[1].rows[0],
         ...results[0].rows[0]
     });
+});
+
+app.post("/new-thread", async (req, res) => {
+    console.log("POST new-thread:", req.body);
+    const userId = req.session.user.id;
+    const { forumId, title, post } = req.body;
+    // first insert thread, get threadId,
+    const { rows } = await insertThread(forumId, userId, title);
+    // then insert new post
+    const threadId = rows[0].id;
+    await insertPost(threadId, userId, post);
+
+    res.json({threadId: threadId});
 });
 
 app.get('*', function(req, res) {

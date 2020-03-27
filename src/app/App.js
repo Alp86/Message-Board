@@ -15,6 +15,7 @@ import UsersOnline from "./UsersOnline";
 import ForumsDashboard from "./forum/ForumsDashboard";
 import Forum from "./forum/Forum";
 import Thread from "./forum/Thread";
+import NewThread from "./forum/NewThread";
 import BreadCrumbsMenu from "./forum/BreadCrumbsMenu";
 
 export default function App () {
@@ -33,7 +34,7 @@ export default function App () {
         <>
         <BrowserRouter>
         {user &&
-            <div>
+            <div id="main-container">
                 <Header/>
 
                 <Route
@@ -108,6 +109,17 @@ export default function App () {
                     exact path="/forums/:forumId/page-:forumPage"
                     render={props => (
                         <Forum
+                            key={props.match.url}
+                            match={props.match}
+                            history={props.history}
+                        />
+                    )}
+                />
+
+                <Route
+                    exact path="/forums/:forumId/new-thread"
+                    render={props => (
+                        <NewThread
                             key={props.match.url}
                             match={props.match}
                             history={props.history}
