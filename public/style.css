@@ -360,9 +360,9 @@ input, button {
 }
 
 .welcome h1 {
-    color: #fafafa;
+    color: black;
     -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: black;
+    -webkit-text-stroke-color: white;
 }
 
 .splash {
