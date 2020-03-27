@@ -373,7 +373,7 @@ exports.insertReaction = function(postId, userId, reaction) {
 exports.getTopTenThreads = function() {
     return db.query(
         `
-        SELECT DISTINCT t.thread_id, threads.title, max(t.created_at)
+        SELECT t.thread_id, threads.title, threads.forum_id, max(t.created_at) AS "lastpost", count(t.id) AS "postCount"
         FROM (
             SELECT posts.id, posts.poster_id, posts.thread_id, posts.created_at
             FROM posts
@@ -381,7 +381,8 @@ exports.getTopTenThreads = function() {
         ) AS t
         LEFT JOIN threads
         ON t.thread_id = threads.id
-        GROUP BY t.thread_id, threads.title
+        GROUP BY t.thread_id, threads.title, threads.forum_id
+        ORDER BY lastpost DESC
         LIMIT 10;
         `
     );

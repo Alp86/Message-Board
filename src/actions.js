@@ -171,5 +171,12 @@ export async function newPost(post) {
         type: "NEW_POST",
         post: data
     };
+}
 
+export function receiveTopTenThreads(threadsObj) {
+    console.log("receiveTopTenThreads running", threadsObj);
+    return {
+        type: "TOP_TEN_THREADS",
+        threads: threadsObj
+    };
 }

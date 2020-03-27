@@ -32,6 +32,7 @@ export default function Reply(props) {
     const dispatch = useDispatch();
 
     const [reply, setReply] = useState();
+    const [replyEmpty, setReplyEmpty] = useState(true);
 
     const [visibility, setVisibility] = useState(false);
 
@@ -69,10 +70,18 @@ export default function Reply(props) {
                         margin="normal"
                         variant="outlined"
                         value={reply}
-                        onChange={e => setReply(e.target.value)}
+                        onChange={e => {
+                            setReply(e.target.value);
+                            if (e.target.value.trim() == "") {
+                                setReplyEmpty(true);
+                            } else {
+                                setReplyEmpty(false);
+                            }
+                        }}
                     />
                     <div className="reply-buttons">
                         <Button
+                            disabled={replyEmpty}
                             variant="contained"
                             color="primary"
                             className={classes.button}

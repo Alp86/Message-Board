@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { socket } from "../../socket";
 import { clearPosts } from "../../actions";
 
-import { Editor } from '@tinymce/tinymce-react';
+
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Post from "./Post";

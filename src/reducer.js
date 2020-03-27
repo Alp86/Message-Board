@@ -159,5 +159,12 @@ export default function(state = {}, action) {
         };
     }
 
+    if (action.type === "TOP_TEN_THREADS") {
+        state = {
+            ...state,
+            topTenThreads: action.threads
+        };
+    }
+
     return state;
 }

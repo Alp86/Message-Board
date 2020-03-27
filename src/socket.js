@@ -3,7 +3,7 @@ import * as io from 'socket.io-client';
 import {
     chatMessages, chatMessage, usersOnline, userIsOnline, userIsOffline,
     receiveFriends, privateMessage, privateMessages, receiveForums, receiveThreadsByForumId,
-    receivePostsByThreadId
+    receivePostsByThreadId, receiveTopTenThreads
 } from './actions';
 
 export let socket;
@@ -113,6 +113,15 @@ export const init = store => {
             postsObj => {
                 store.dispatch(
                     receivePostsByThreadId(postsObj)
+                );
+            }
+        );
+
+        socket.on(
+            'receiveTopTenThreads',
+            threadsObj => {
+                store.dispatch(
+                    receiveTopTenThreads(threadsObj)
                 );
             }
         );

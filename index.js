@@ -10,7 +10,7 @@ const csurf = require('csurf');
 const compression = require('compression');
 const {
     getUserById, insertChatMessage, getLastTenChatMessages, getPrivateMessages, insertPrivateMessage,
-    getForums, getThreadsByForumId, getPostsByThreadId, getPostsByUserId, insertPost, insertThread
+    getForums, getThreadsByForumId, getPostsByThreadId, getPostsByUserId, insertPost, insertThread, getTopTenThreads
 } = require('./libs/db');
 
 app.use(compression());
@@ -151,6 +151,10 @@ io.on('connection', socket => {
         socket.emit("forumsDashboard", rows);
     });
 
+    getTopTenThreads().then( ({rows}) => {
+        socket.emit("receiveTopTenThreads", rows);
+    }).catch(error => console.log("error in getTopTenThreads", error));
+
     socket.on("disconnect", () => {
         console.log(`user with userId ${userId} disconnected`);
         delete listOfOnlineUsers[socket.id];
@@ -248,6 +252,7 @@ io.on('connection', socket => {
             socket.emit("receivePostsByThreadId", rows);
         }).catch(error => console.log("error in getPostsByThreadId", error));
     });
+
 
 
 });

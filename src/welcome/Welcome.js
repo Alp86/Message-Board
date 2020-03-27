@@ -10,9 +10,13 @@ import { HashRouter, Route } from "react-router-dom";
 export default function Welcome() {
     return (
         <HashRouter>
-            <div>
-                <h1>Welcome to Social Isolation...</h1>
-                <h1>...once you join, you cannot leave</h1>
+            <img
+                className="splash"
+                src="./background.jpg"
+            />
+            <div className="welcome">
+                <h1>HANG IN THERE</h1>
+                <h1>A BOULDERING COMMUNITY PLATFORM</h1>
                 <div>
                     <Route exact component={Registration} path="/" />
                     <Route exact component={Login} path="/login" />

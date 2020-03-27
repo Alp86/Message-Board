@@ -29,6 +29,7 @@ export default function Reply(props) {
     const classes = useStyles();
 
     const [reply, setReply] = useState();
+    const [replyEmpty, setReplyEmpty] = useState(true);
 
     const dispatch = useDispatch();
 
@@ -57,18 +58,26 @@ export default function Reply(props) {
                     margin="normal"
                     variant="outlined"
                     value={reply}
-                    onChange={e => setReply(e.target.value)}
+                    onChange={e => {
+                        setReply(e.target.value);
+                        if (e.target.value.trim() == "") {
+                            setReplyEmpty(true);
+                        } else {
+                            setReplyEmpty(false);
+                        }
+                    }}
                 />
             </div>
 
             <Button
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              startIcon={<ReplyIcon />}
-              onClick={handleClick}
+                disabled={replyEmpty}
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                startIcon={<ReplyIcon />}
+                onClick={handleClick}
             >
-            Reply to thread
+                Reply to thread
             </Button>
         </>
     );
