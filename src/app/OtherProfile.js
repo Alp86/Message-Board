@@ -6,7 +6,7 @@ import { socket } from "../socket";
 import FriendButton from "./FriendButton";
 import ProfilePic from "./ProfilePic";
 import BasicTextFields from "./BasicTextFields";
-import ProfileCard from "./Profilecard";
+import ProfileCard from "./ProfileCard";
 
 export default function OtherProfile(props) {
     const dispatch = useDispatch();
