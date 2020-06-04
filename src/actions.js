@@ -166,6 +166,7 @@ export async function newPost(post) {
     console.log("newPost running:");
     const { data } = await axios.post("/new-post", post);
     console.log("newPost data:", data);
+    //socket.emit("updateTopTenThreads")
     return {
         type: "NEW_POST",
         post: data,
