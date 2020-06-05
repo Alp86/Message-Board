@@ -19,8 +19,7 @@ Live version here: https://hang-in-there.herokuapp.com/
 ![Forums dashboard](https://github.com/Alperen-Kan/Message-Board/blob/final/screenshots/dashboard.jpg)
 
 
-#### View of thread with posts
+#### View of thread: posts, pagination, reply box
 ![Thread with posts](https://github.com/Alperen-Kan/Message-Board/blob/final/screenshots/thread1.jpg)
 
-#### View of thread pagination and reply box
 ![View of thread pagination and reply box](https://github.com/Alperen-Kan/Message-Board/blob/final/screenshots/thread2.jpg)
