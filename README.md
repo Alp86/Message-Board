@@ -13,3 +13,5 @@ Live here: https://hang-in-there.herokuapp.com/forums
 * PostgreSQL
 * AWS S3 & SES
 * Deployment: heroku
+
+![Message board dashboard](https://github.com/[Alperen-Kan]/[Message-Board]/blob/[final]/screenshots/dashboard.jpg?raw=false)
